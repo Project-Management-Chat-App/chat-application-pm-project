@@ -159,7 +159,9 @@ router.get("/conversations/:conversationId/messages", function(req, res) {
 
 // this route search a string on the content of the current user's conversations (if authenticated)
 // and search user's email and usernames on the network, mostly to connect
-router.get("/search?q='some-string'", function (req, res) {
+router.get("/search", function (req, res) {
+    // this is the search string format
+    // ?q='some-string' 
     res.status(200).json({
         "users": [
             {
