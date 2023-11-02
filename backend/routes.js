@@ -21,3 +21,9 @@ router.post("/register", function(req, res) {
     });
 });
 
+// dummy request
+router.get('/', (req, res) => {
+    res.send('<h1>get response for the chat app</h1>');
+});
+
+module.exports = router;
