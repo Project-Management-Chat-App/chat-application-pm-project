@@ -3,9 +3,9 @@
 // something like a repository pattern
 
 
-const Conversation = require('./models/conversation.model');
-const User = require('./models/user.model');
-const UserConversation = require('./models/userConversation.model');
+const Conversation = require('./repositories/conversation.repository');
+const User = require('./repositories/user.repository');
+const UserConversation = require('./repositories/userConversation.repository');
 
 // the repository pattern is used to restrict the server from directly accessing the database
 const UserConversationRepository = new class {

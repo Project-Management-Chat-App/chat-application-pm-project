@@ -2,7 +2,7 @@
 // this is to restrict the server from directly accessing the database
 // something like a repository pattern
 
-const User = require('./models/user.model');
+const User = require('./repositories/user.repository');
 
 // the repository pattern is used to restrict the server from directly accessing the database
 // this is to make the code more modular and easier to maintain

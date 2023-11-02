@@ -3,7 +3,7 @@
 // something like a repository pattern
 
 
-const Message = require('./models/message.model');
+const Message = require('./repositories/message.repository');
 
 // the repository pattern is used to restrict the server from directly accessing the database
 
