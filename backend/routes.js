@@ -58,6 +58,7 @@ router.get("/profile", function(req, res) {
     });
 });
 
+// get a list of the conversations of the current user
 router.get("/conversations", function(req, res) {
     // this should include header with bearer token, same as on /profile route
     // based on the user ID it will show all the user's conversations
@@ -91,6 +92,8 @@ router.get("/conversations", function(req, res) {
     });
 });
 
+// this will not be necessary later on as we will be pushing the messages to the client
+// using socket.io as well as pushing the messages to the server and database
 router.get("/conversations/:conversationId/messages", function(req, res) {
     // this should include header with bearer token, same as on /profile route
     // based on the user ID it will show all the user's conversations
