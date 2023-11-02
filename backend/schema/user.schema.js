@@ -28,6 +28,10 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    profilePicture: { // url for the profile picture
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     dateCreated: {
         type: DataTypes.DATE,
         allowNull: false,
