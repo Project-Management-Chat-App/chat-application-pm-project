@@ -46,7 +46,7 @@ router.get('/', function(req, res) {
 // the get user profile route
 router.get("/profile", function(req, res) {
     // this should include header with bearer token
-    // Authentication: value in the format Bearer {The-token-string}
+    // Authorization: value in the format Bearer {The-token-string}
     res.status(200).json({
         "id": "3", // some row id
         "username": "username",
