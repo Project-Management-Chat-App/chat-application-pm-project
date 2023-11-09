@@ -6,6 +6,9 @@ const express = require("express");
 const { loginController, registerController, getUserProfile } = require("./controllers/user.controller.js");
 const router = express.Router();
 
+// auth middleware  
+const { validateUserIsAuthenticated } = require("./middlewares/auth.middleware");
+
 // the routes here, mapped as address string, function(request object, response object)
 
 // dummy request
@@ -20,8 +23,8 @@ router.post("/login", loginController);
 router.post("/register", registerController);
 
 
-// the get user profile route
-router.get("/profile", getUserProfile);
+// the get user profile route, use authentication middleware
+router.get("/profile", validateUserIsAuthenticated, getUserProfile);
 
 // get a list of the conversations of the current user
 router.get("/conversations", function(req, res) {
