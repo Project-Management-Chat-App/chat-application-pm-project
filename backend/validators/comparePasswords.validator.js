@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const userRepository = require('../repositories/user.repository');
 
 async function comparePasswords(password, username) {
@@ -9,6 +9,11 @@ async function comparePasswords(password, username) {
 
         // search user by username
         const user = await userRepository.getUserByUsername(username);
+
+        // if the user is empty, return false
+        if (!user) {
+            return false;
+        }
         
         // compare password hash with password in the form
         // this will return true if passwords match, or false if they don't
@@ -16,7 +21,7 @@ async function comparePasswords(password, username) {
     } catch (error) {
         // if something goes wrong with the get user method
         // like user not found, return false
-        console.log(error);
+        // console.log(error);
         return false;
     }
 }

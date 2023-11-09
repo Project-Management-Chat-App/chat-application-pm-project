@@ -53,5 +53,11 @@ httpServer.listen(socketIOPort, () => {
 // initiate sequelize from connection on the database directory
 const sequelize = require('./database/sequelize');
 
+// const connection = sequelize.sqlConnection;
+// sequelize.syncDatabase();
+
+// // sync the database
+// connection.sync();
+
 
 sequelize.testConnection();

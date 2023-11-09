@@ -3,10 +3,11 @@
 // first import our sequelize instance and datatypes class
 const sequelize = require('../database/sequelize').sqlConnection;
 const { DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // bcrypt variables
 const SALT_ROUNDS = 10;
+let salt = bcrypt.genSaltSync(SALT_ROUNDS);
 
 
 // define the user schema
@@ -48,7 +49,8 @@ const User = sequelize.define('User', {
     hooks: {
         beforeCreate: (user) => {
             // use bcrypt to hash password
-            user.passwordHash = bcrypt.hashSync(user.passwordHash, SALT_ROUNDS);
+            user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
+            
         }
     },
 
@@ -57,18 +59,11 @@ const User = sequelize.define('User', {
         beforeUpdate: (user) => {
             if (user.passwordHash) {
                 // use bcrypt to hash password
-                user.passwordHash = bcrypt.hashSync(user.passwordHash, SALT_ROUNDS);
+                user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
             }
-        }
-    },
 
-    // compare password hash, returns true if password is correct
-    instanceMethods: {
-        validPassword: function(password) {
-            return bcrypt.compareSync(password, this.passwordHash);
         }
     },
-    
     // disable the default timestamp fields (createdAt and updatedAt)
     timestamps: false,
 });

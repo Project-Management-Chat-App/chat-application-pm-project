@@ -2,14 +2,16 @@
 // this is to restrict the server from directly accessing the database
 // something like a repository pattern
 
-const User = require('./repositories/user.repository');
+const User = require('../schema/user.schema');
+// const { Op } = require('sequelize');
+
 
 // the repository pattern is used to restrict the server from directly accessing the database
 // this is to make the code more modular and easier to maintain
 const UserRepository = new class {
     async createUser(user) {
         // validate user data
-
+        // console.log("user: ", user);
         // if data is empty, throw error
         if (!user) {
             throw new Error('User data is empty');
@@ -21,14 +23,8 @@ const UserRepository = new class {
         }
 
         // if password is empty, throw error
-        if (!user.password) {
+        if (!user.passwordHash) {
             throw new Error('User password is empty');
-        }
-
-        // verify if user exists
-        const usernameExists = await this.getUserByUsername(user.username);
-        if (usernameExists || emailExists) {
-            throw new Error('Username or Email already exists');
         }
 
         // compare user to pattern, not bigger than 16 chars
@@ -41,7 +37,19 @@ const UserRepository = new class {
             throw new Error('Email is not valid');
         }
 
-        return await User.create(user);
+        console.log("finished input validation");
+
+        
+        return await User.create({
+            username: user.username,
+            email: user.email,
+            passwordHash: user.passwordHash,
+            bio: user.bio,
+            profilePicture: user.profilePicture,
+        }, {
+            fields: ['username', 'email', 'passwordHash', 'bio', 'profilePicture']
+        });
+
     }
     async getUserById(id) {
         // if user is not found, throw error
@@ -64,9 +72,9 @@ const UserRepository = new class {
         
         // if user is not found, throw error
         const user = await User.findOne({ where: { email } });
-        if (!user) {
-            throw new Error('User not found');
-        }
+        // if (!user) {
+        //     throw new Error('User not found');
+        // }
 
         return user;
     }
@@ -76,12 +84,8 @@ const UserRepository = new class {
             throw new Error('User username is empty');
         }
 
-        // if user is not found, throw error
         const user = await User.findOne({ where: { username } });
-        if (!user) {
-            throw new Error('User not found');
-        }
-
+        
         return user;
     }
     async updateUser(user) {

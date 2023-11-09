@@ -3,7 +3,7 @@
 // and logics mapped in here
 
 const express = require("express");
-const { loginController } = require("./controller/user.controller.js");
+const { loginController, registerController } = require("./controllers/user.controller.js");
 const router = express.Router();
 
 // the routes here, mapped as address string, function(request object, response object)
@@ -12,21 +12,7 @@ const router = express.Router();
 router.post("/login", loginController);
 
 // the register route
-router.post("/register", function(req, res) {
-    // the request body should have
-    // {
-    // email: string
-    // username: string
-    // password: string
-    // passwordConfirmation: string
-    // passwordConfirmation: string
-    // bio: string optional
-    // }
-
-    res.status(200).json({
-        "message": "Register Successful",
-    });
-});
+router.post("/register", registerController);
 
 // dummy request
 router.get('/', function(req, res) {

@@ -6,7 +6,28 @@ const { Sequelize } = require('sequelize');
 // pass the .env variables to the connection string
 const CONN_STRING = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`;
 
-const sqlConnection = new Sequelize(CONN_STRING) 
+const sqlConnection = new Sequelize(CONN_STRING,{
+    dialect: 'postgres',
+    define: {
+        timestamps: false
+    },
+    logging: true,
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    }
+}) 
+
+// sync the database
+async function syncDatabase() {
+    try {
+        await sqlConnection.sync();
+        console.log('Database synced successfully.');
+    } catch (error) {
+        console.error('Unable to sync database:', error);
+    }
+}
 
 
 // test the connection function
@@ -21,5 +42,6 @@ async function testConnection() {
 
 module.exports = {
     sqlConnection,
-    testConnection
+    testConnection,
+    syncDatabase
 }
