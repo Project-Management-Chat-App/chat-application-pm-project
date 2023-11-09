@@ -3,6 +3,11 @@ const { comparePasswords } = require('../validators/comparePasswords.validator')
 const userRepository = require('../repositories/user.repository');
 const User = require('../schema/user.schema');
 
+// add validators
+const {validatePassword} = require('../validators/passwordCreate.validator');
+const {validateEmail} = require('../validators/email.validator');
+const {validateUsername} = require('../validators/username.validator');
+
 async function loginController(req, res) {
     // first get the username and password from the request body
     const { username, password } = req.body;
@@ -39,26 +44,30 @@ async function registerController(req, res) {
         profilePicture: req.body.profilePicture || "",
     }
 
-    // some pre-validation, just making sure required fields are not empty
-    // check if username, email or password are empty
-    if (!payload.username || !payload.email) {
-        return res.status(400).json({ // bad request, anything that goes wrong with sending the request, we send this error, example: empty username or password, or empty body, timeout, etc
-            "message": "Username, Email or Password is empty",
-        });
-    }
+    // run password validation
+    const [passwordIsValid, passwordError] = validatePassword(payload.passwordHash, req.body.passwordConfirmation);
 
-    if (!payload.passwordHash || !req.body.passwordConfirmation) {
+    if (passwordIsValid === false) {
         return res.status(400).json({ // bad request, anything that goes wrong with sending the request, we send this error, example: empty username or password, or empty body, timeout, etc
-            "message": "Password or Password Confirmation is empty",
+            "message": `Error on validate password: ${passwordError}`,
         });
-    }
+    };
 
-    // check if password and password confirmation match
-    if (payload.passwordHash !== req.body.passwordConfirmation) {
+    // run email validation
+    const [emailIsValid, emailError] = validateEmail(payload.email);
+    if (emailIsValid === false) {
         return res.status(400).json({ // bad request, anything that goes wrong with sending the request, we send this error, example: empty username or password, or empty body, timeout, etc
-            "message": "Password and Password Confirmation do not match",
+            "message": `Error on validate email: ${emailError}`,
         });
-    }
+    };
+
+    // run username validation
+    const [usernameIsValid, usernameError] = validateUsername(payload.username);
+    if (usernameIsValid === false) {
+        return res.status(400).json({ // bad request, anything that goes wrong with sending the request, we send this error, example: empty username or password, or empty body, timeout, etc
+            "message": `Error on validate username: ${usernameError}`,
+        });
+    };
 
     // add input validation first
 
@@ -82,7 +91,7 @@ async function registerController(req, res) {
         const user = await userRepository.createUser(payload);
         if (!user) {
             return res.status(500).json({ // internal server error, if something goes wrong with the server, we send this error, like could not connect or save this user
-                "message": "Something went wrong",
+                "message": "Something went wrong: could not create user",
             });
         }
         

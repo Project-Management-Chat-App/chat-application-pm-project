@@ -11,7 +11,6 @@ const User = require('../schema/user.schema');
 const UserRepository = new class {
     async createUser(user) {
         // validate user data
-        // console.log("user: ", user);
         // if data is empty, throw error
         if (!user) {
             throw new Error('User data is empty');
@@ -22,10 +21,10 @@ const UserRepository = new class {
             throw new Error('User email is empty');
         }
 
-        // if password is empty, throw error
-        if (!user.passwordHash) {
-            throw new Error('User password is empty');
-        }
+        // // if password is empty, throw error
+        // if (!user.passwordHash) {
+        //     throw new Error('User password is empty');
+        // }
 
         // compare user to pattern, not bigger than 16 chars
         if (!user.username.match(/^[a-zA-Z0-9]{1,16}$/)) {
@@ -52,13 +51,6 @@ const UserRepository = new class {
         
         const result = await User.create(userPayloadObject);
 
-        // console.log("result: ", result);
-        // console.log("username: ", result.username);
-        // console.log("username dtype: ", typeof result.username);
-        // console.log("email: ", result.email);
-        // console.log("email dtype: ", typeof result.email);
-        console.log("passwordHash: ", result.passwordHash);
-        console.log("passwordHash dtype: ", typeof result.passwordHash);
 
         return result;
     }
