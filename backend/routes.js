@@ -3,10 +3,15 @@
 // and logics mapped in here
 
 const express = require("express");
-const { loginController, registerController } = require("./controllers/user.controller.js");
+const { loginController, registerController, getUserProfile } = require("./controllers/user.controller.js");
 const router = express.Router();
 
 // the routes here, mapped as address string, function(request object, response object)
+
+// dummy request
+router.get('/', function(req, res) {
+    res.send('<h1>get response for the chat app</h1>');
+});
 
 // the login route
 router.post("/login", loginController);
@@ -14,25 +19,9 @@ router.post("/login", loginController);
 // the register route
 router.post("/register", registerController);
 
-// dummy request
-router.get('/', function(req, res) {
-    res.send('<h1>get response for the chat app</h1>');
-});
 
 // the get user profile route
-router.get("/profile", function(req, res) {
-    // this should include header with bearer token
-    // Authorization: value in the format Bearer {The-token-string}
-    res.status(200).json({
-        "id": "3", // some row id
-        "username": "username",
-        "email": "user@email.com",
-        "profilePicture": "https://www.some-random-website.com/some-image.jpg",
-        "bio": "Lorem ipsum lalalalalalalala",
-        "dateCreated": "01/02/2022-12:00:00 (non formatted yet)",
-        "dateUpdated": "01/02/2022-12:00:00 (non formatted yet)",
-    });
-});
+router.get("/profile", getUserProfile);
 
 // get a list of the conversations of the current user
 router.get("/conversations", function(req, res) {

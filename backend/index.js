@@ -8,9 +8,6 @@ const expressPort = 8080;
 // import routes module
 const routes = require("./routes")
 
-// expressApp.get('/', (req, res) => {
-//     res.send('<h1>get response for the chat app</h1>');
-// });
 
 expressApp.use(express.json())
 expressApp.use("", routes);

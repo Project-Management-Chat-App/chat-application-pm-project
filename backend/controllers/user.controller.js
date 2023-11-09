@@ -107,12 +107,47 @@ async function registerController(req, res) {
         return res.status(500).json({ // internal server error, if something goes wrong with the server, we send this error, like could not connect or save this user
             "message": "Something went wrong: " + error.message,
         });
-    }
-        
-    
+    } 
 };
+
+async function getUserProfile(req, res) {
+
+
+    // get the user id from the request
+    const userId = 1; // for the moment, use a dummy user id
+
+    try {
+
+        // get the user from the database
+        const user = await userRepository.getUserById(userId);
+        
+        // if user is not found, throw error
+        if (!user) {
+            return res.status(404).json({ // not found, if user is not found, we send this error
+                "message": "User not found",
+            });
+        }
+
+        // return dummy data
+    return res.status(200).json({
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "bio": user.bio,
+        "profilePicture": user.profilePicture,
+        "dateCreated": user.dateCreated,
+        "dateUpdated": user.dateUpdated,
+    });
+    } catch (error) {
+        console.error("request or db error: ", error.message);
+
+    }
+
+    
+}
 
 module.exports = {
     loginController,
     registerController,
+    getUserProfile,
 };

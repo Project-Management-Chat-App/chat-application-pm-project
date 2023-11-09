@@ -9,34 +9,7 @@ const User = require('../schema/user.schema');
 // the repository pattern is used to restrict the server from directly accessing the database
 // this is to make the code more modular and easier to maintain
 const UserRepository = new class {
-    async createUser(user) {
-        // validate user data
-        // if data is empty, throw error
-        if (!user) {
-            throw new Error('User data is empty');
-        }
-
-        // if email is empty, throw error
-        if (!user.email) {
-            throw new Error('User email is empty');
-        }
-
-        // // if password is empty, throw error
-        // if (!user.passwordHash) {
-        //     throw new Error('User password is empty');
-        // }
-
-        // compare user to pattern, not bigger than 16 chars
-        if (!user.username.match(/^[a-zA-Z0-9]{1,16}$/)) {
-            throw new Error('Username must be alphanumeric');
-        }
-
-        // compare email full address to pattern (regex), not bigger than 32 chars
-        if (!user.email.match(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)) {
-            throw new Error('Email is not valid');
-        }
-
-        
+    async createUser(user) {        
 
         const userPayloadObject = {
             "username": user.username,
