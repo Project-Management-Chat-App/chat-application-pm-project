@@ -37,19 +37,30 @@ const UserRepository = new class {
             throw new Error('Email is not valid');
         }
 
-        console.log("finished input validation");
-
         
-        return await User.create({
-            username: user.username,
-            email: user.email,
-            passwordHash: user.passwordHash,
-            bio: user.bio,
-            profilePicture: user.profilePicture,
-        }, {
-            fields: ['username', 'email', 'passwordHash', 'bio', 'profilePicture']
-        });
 
+        const userPayloadObject = {
+            "username": user.username,
+            "email": user.email,
+            "passwordHash": user.passwordHash,
+            "bio": user.bio || "blabla",
+            "profilePicture": user.profilePicture || "blabla",
+            "dateCreated": new Date(),
+            "dateUpdated": new Date()
+        };
+        
+        
+        const result = await User.create(userPayloadObject);
+
+        // console.log("result: ", result);
+        // console.log("username: ", result.username);
+        // console.log("username dtype: ", typeof result.username);
+        // console.log("email: ", result.email);
+        // console.log("email dtype: ", typeof result.email);
+        console.log("passwordHash: ", result.passwordHash);
+        console.log("passwordHash dtype: ", typeof result.passwordHash);
+
+        return result;
     }
     async getUserById(id) {
         // if user is not found, throw error
@@ -72,9 +83,6 @@ const UserRepository = new class {
         
         // if user is not found, throw error
         const user = await User.findOne({ where: { email } });
-        // if (!user) {
-        //     throw new Error('User not found');
-        // }
 
         return user;
     }

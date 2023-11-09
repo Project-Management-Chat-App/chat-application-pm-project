@@ -51,19 +51,24 @@ const User = sequelize.define('User', {
             // use bcrypt to hash password
             user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
             
-        }
-    },
-
-    // hash the password on password update
-    validate: {
+        },
         beforeUpdate: (user) => {
-            if (user.passwordHash) {
-                // use bcrypt to hash password
-                user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
-            }
-
-        }
+            // use bcrypt to hash password
+            user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
+            
+        },
     },
+
+    // // hash the password on password update
+    // validate: {
+    //     beforeUpdate: (user) => {
+    //         if (user.passwordHash) {
+    //             // use bcrypt to hash password
+    //             user.passwordHash = bcrypt.hashSync(user.passwordHash, salt);
+    //         }
+
+    //     }
+    // },
     // disable the default timestamp fields (createdAt and updatedAt)
     timestamps: false,
 });

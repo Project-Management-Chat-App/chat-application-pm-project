@@ -78,18 +78,19 @@ async function registerController(req, res) {
             });
         }
 
-
         // create user
-        await userRepository.createUser(payload);
+        const user = await userRepository.createUser(payload);
+        if (!user) {
+            return res.status(500).json({ // internal server error, if something goes wrong with the server, we send this error, like could not connect or save this user
+                "message": "Something went wrong",
+            });
+        }
         
+
+        return res.status(201).json({ // created, if everything goes well, we send this code, and a message that the user was created successfully
+            "message": "Register Successful",
+        });
         
-        
-        // // if user is empty, return error
-        // if (!user) {
-        //     return res.status(500).json({ // internal server error, if something goes wrong with the server, we send this error, like could not connect or save this user
-        //         "message": "Something went wrong",
-        //     });
-        // }
 
     } catch (error) {
         // if something goes wrong with the user creation, return error
@@ -99,9 +100,7 @@ async function registerController(req, res) {
         });
     }
         
-    return res.status(201).json({ // created, if everything goes well, we send this code, and a message that the user was created successfully
-        "message": "Register Successful",
-    });
+    
 };
 
 module.exports = {
