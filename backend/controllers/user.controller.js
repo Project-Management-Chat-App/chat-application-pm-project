@@ -27,6 +27,13 @@ async function loginController(req, res) {
             "message": "Username or Password is incorrect",
         });
     }
+
+    // find user by username
+    const user = await userRepository.getUserByUsername(username);
+
+    // save user data to session
+    req.session.user = user.id;
+
     
     return res.status(200).json({
         "message": "Login Successful",
@@ -93,8 +100,7 @@ async function registerController(req, res) {
             return res.status(500).json({ // internal server error, if something goes wrong with the server, we send this error, like could not connect or save this user
                 "message": "Something went wrong: could not create user",
             });
-        }
-        
+        } 
 
         return res.status(201).json({ // created, if everything goes well, we send this code, and a message that the user was created successfully
             "message": "Register Successful",
@@ -108,13 +114,15 @@ async function registerController(req, res) {
             "message": "Something went wrong: " + error.message,
         });
     } 
+
+   
 };
 
 async function getUserProfile(req, res) {
 
 
     // get the user id from the request
-    const userId = 1; // for the moment, use a dummy user id
+    const userId = req.session.user;
 
     try {
 
@@ -129,15 +137,15 @@ async function getUserProfile(req, res) {
         }
 
         // return dummy data
-    return res.status(200).json({
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "bio": user.bio,
-        "profilePicture": user.profilePicture,
-        "dateCreated": user.dateCreated,
-        "dateUpdated": user.dateUpdated,
-    });
+        return res.status(200).json({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "bio": user.bio,
+            "profilePicture": user.profilePicture,
+            "dateCreated": user.dateCreated,
+            "dateUpdated": user.dateUpdated,
+        });
     } catch (error) {
         console.error("request or db error: ", error.message);
 
