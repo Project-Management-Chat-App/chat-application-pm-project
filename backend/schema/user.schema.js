@@ -61,6 +61,13 @@ const User = sequelize.define('User', {
             }
         }
     },
+
+    // compare password hash, returns true if password is correct
+    instanceMethods: {
+        validPassword: function(password) {
+            return bcrypt.compareSync(password, this.passwordHash);
+        }
+    },
     
     // disable the default timestamp fields (createdAt and updatedAt)
     timestamps: false,

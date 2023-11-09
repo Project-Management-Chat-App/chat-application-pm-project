@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+RUN apk --no-cache add --virtual builds-deps build-base python
+
 COPY . .
 
 EXPOSE 8080

@@ -3,23 +3,13 @@
 // and logics mapped in here
 
 const express = require("express");
+const { loginController } = require("./controller/user.controller.js");
 const router = express.Router();
 
 // the routes here, mapped as address string, function(request object, response object)
 
 // the login route
-router.post("/login", function(req, res) {
-
-    // the request body should have
-    // {
-    // email: string
-    // password: string
-    // }
-
-    res.status(200).json({
-        "message": "Login Successful",
-    });
-});
+router.post("/login", loginController);
 
 // the register route
 router.post("/register", function(req, res) {

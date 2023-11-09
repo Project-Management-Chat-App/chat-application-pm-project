@@ -12,6 +12,7 @@ const routes = require("./routes")
 //     res.send('<h1>get response for the chat app</h1>');
 // });
 
+expressApp.use(express.json())
 expressApp.use("", routes);
 
 expressApp.listen(expressPort, () => {
