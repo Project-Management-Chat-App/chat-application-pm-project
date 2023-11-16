@@ -1,21 +1,104 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Chat App</title>
-        <link rel="icon" type="image/x-icon" sizes="16x16" href="icons/favicon.ico">
-    </head>
-    <body>
-        <h1>Chat App</h1>
 
-        <include src="/header.html"></include>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <title>Chat App</title>
+</head>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi qui culpa illum impedit ea doloremque quis error sunt rerum laborum saepe blanditiis reiciendis et placeat tempore quos, consequuntur, vero modi quasi! Nulla quis aut vitae ducimus sed officia harum sapiente maxime amet eos earum ipsum nihil, ab ut tempora ea?</p>
-        <include src="/footer.html"></include>
-        
-    </body>
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="bundle.js"></script>
-    
+<body>
+
+    <header>
+        <h1>Everyone's Favourite</h1>
+        <h3>Chat App</h3>
+    </header>
+
+    <main>
+        <div class="app">
+            <div class="messages-input">
+                <div id="messagesDiv" class="messages-div">
+                    <div id="messages" class="messages"></div>
+                </div>
+
+                <div class="input-div">
+                    <form id="form" class="form" action="">
+                        <input id="input" maxlength="500" placeholder="Type a message..." />
+                        <button class="button">Send</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="account-panel">
+                <div class="profile-pic"></div>
+                <h4 class="panel-title">Friends</h4>
+                <hr class="panel-divider">
+                <h4 class="panel-title">Groups</h4>
+                <hr class="panel-divider">
+                <h4 class="panel-title">Settings</h4>
+                <hr class="panel-divider">
+                <h4 class="panel-title">Admin</h4>
+                <hr class="panel-divider">
+                <h4 class="panel-title">Logout</h4>
+            </div>
+        </div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        // create a socket.io instance and establish a connection to the server 
+        const socket = io();
+
+        // reference DOM items
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        // listen for form submission
+        form.addEventListener('submit', (e) => {
+            // prevent app page refresh on submission
+            e.preventDefault();
+
+            // check if the user entered a text message
+            if (input.value) {
+                const message = {
+                    type: 'text',
+                    content: input.value,
+                };
+
+                // "emit" the chat chat event with the message content
+                socket.emit('chat message', message);
+
+                // clear the text message input field
+                input.value = '';
+            }
+        });
+
+        // listening for incoming chat messages from the server
+        socket.on('chat message', (msg) => {
+            const messages = document.getElementById('messages');
+
+            // create a new list item to display the message
+            const item = document.createElement('p');
+
+            // if it's a text message, create a text message item
+            if (msg.type === 'text') {
+                item.textContent = msg.content;
+            }
+
+            // add the message item to the list of messages
+            messages.appendChild(item);
+
+            // message appears at the bottom of the screen
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="bundle.js"></script>
+
 </html>
