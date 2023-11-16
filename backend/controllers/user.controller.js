@@ -115,7 +115,6 @@ async function registerController(req, res) {
         });
     } 
 
-   
 };
 
 async function getUserProfile(req, res) {

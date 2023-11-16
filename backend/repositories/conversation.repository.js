@@ -2,9 +2,9 @@
 // this is to restrict the server from directly accessing the database
 // something like a repository pattern
 
-const Conversation = require('./repositories/conversation.repository');
-const User = require('./repositories/user.repository');
-const UserConversation = require('./repositories/userConversation.repository');
+const Conversation = require('../schema/conversation.schema');
+const User = require('../schema/user.schema');
+const UserConversation = require('../schema/userConversation.schema');
 
 // the repository pattern is used to restrict the server from directly accessing the database
 // this is to make the code more modular and easier to maintain
