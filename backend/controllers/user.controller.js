@@ -150,12 +150,25 @@ async function getUserProfile(req, res) {
         console.error("request or db error: ", error.message);
 
     }
+}
 
-    
+async function logoutController(req, res) {
+    // destroy session
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({
+                "message": "Could not logout",
+            });
+        }
+        return res.status(200).json({
+            "message": "Logout successful",
+        });
+    });
 }
 
 module.exports = {
     loginController,
     registerController,
     getUserProfile,
-};
+    logoutController,
+}

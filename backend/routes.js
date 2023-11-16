@@ -3,7 +3,7 @@
 // and logics mapped in here
 
 const express = require("express");
-const { loginController, registerController, getUserProfile } = require("./controllers/user.controller.js");
+const { loginController, registerController, getUserProfile, logoutController } = require("./controllers/user.controller.js");
 const router = express.Router();
 
 // auth middleware  
@@ -25,6 +25,8 @@ router.post("/register", registerController);
 
 // the get user profile route, use authentication middleware
 router.get("/profile", validateUserIsAuthenticated, getUserProfile);
+
+router.post("/logout", logoutController, validateUserIsAuthenticated);
 
 // get a list of the conversations of the current user
 router.get("/conversations", function(req, res) {
