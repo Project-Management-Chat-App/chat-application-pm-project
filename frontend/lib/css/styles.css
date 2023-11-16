@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e5e5e5;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header h3 {
+    margin: 5px 0;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    width: 80%;
+}
+
+.messages-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.messages-div,
+.input-div {
+    border: 1px solid #bcbcbc;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#messagesDiv {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #FFD1D7; 
+}
+
+.form {
+    display: flex;
+    align-items: center;
+}
+
+#input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #bcbcbc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.messages p {
+    background-color: #f9f9f9; /* Updated background color for messages */
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    word-break: break-word;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.account-panel {
+    background-color: #ffffff; /* Updated background color for account panel */
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 200px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.profile-pic {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 3px solid #333;
+    margin: 1rem auto;
+}
+
+.panel-title {
+    margin: 0.5rem 0;
+}
+
+.panel-divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+    width: 60%;
+}
