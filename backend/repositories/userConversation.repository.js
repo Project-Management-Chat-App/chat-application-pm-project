@@ -3,37 +3,37 @@
 // something like a repository pattern
 
 
-const Conversation = require('./repositories/conversation.repository');
-const User = require('./repositories/user.repository');
-const UserConversation = require('./repositories/userConversation.repository');
+const Conversation = require('../schema/conversation.schema');
+const User = require('../schema/user.schema');
+const UserConversation = require('../schema/userConversation.schema');
 
-// the repository pattern is used to restrict the server from directly accessing the database
+
+// this schema is used to store the user conversation associations
 const UserConversationRepository = new class {
-    async createUserConversation(userConversation) {
+    async createUserConversation(userId, conversationId) {
         // validate user conversation data
 
-        // if data is empty, throw error
-        if (!userConversation) {
-            throw new Error('User conversation data is empty');
-        }
-
+        
         // if userId is empty, throw error
-        if (!userConversation.userId) {
+        if (!userId) {
             throw new Error('User conversation userId is empty');
         }
 
         // if conversationId is empty, throw error
-        if (!userConversation.conversationId) {
+        if (!conversationId) {
             throw new Error('User conversation conversationId is empty');
         }
 
         // verify if user conversation exists
-        const userConversationExists = await this.getUserConversationByUserIdAndConversationId(userConversation.userId, userConversation.conversationId);
+        const userConversationExists = await this.getUserConversationByUserIdAndConversationId(userId, conversationId);
         if (userConversationExists) {
             throw new Error('User conversation already exists');
         }
 
-        return await UserConversation.create(userConversation);
+        return await UserConversation.create({
+            userId: userId,
+            conversationId: conversationId
+        });
     }
 
     async getUserConversationByUserIdAndConversationId(userId, conversationId) {

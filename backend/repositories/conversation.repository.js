@@ -9,36 +9,31 @@ const UserConversation = require('../schema/userConversation.schema');
 // the repository pattern is used to restrict the server from directly accessing the database
 // this is to make the code more modular and easier to maintain
 const ConversationRepository = new class {
-    async createConversation(conversation) {
+    async createConversation(payload) {
         // validate conversation data
 
         // if data is empty, throw error
-        if (!conversation) {
+        if (!payload) {
             throw new Error('Conversation data is empty');
         }
 
         // if title is empty, throw error
-        if (!conversation.title) {
+        if (!payload.title) {
             throw new Error('Conversation title is empty');
         }
 
         // if conversation type is empty, throw error
-        if (!conversation.conversationType) {
+        if (!payload.conversationType) {
             throw new Error('Conversation type is empty');
         }
 
         // if conversation type is not 'private' or 'group', throw error
-        if (conversation.conversationType !== 'private' && conversation.conversationType !== 'group') {
+        if (payload.conversationType !== 'private' && payload.conversationType !== 'group') {
             throw new Error('Conversation type is invalid, must be either \'private\' or \'group\'');
         }
 
-        // verify if conversation exists
-        const conversationExists = await this.getConversationByTitle(conversation.title);
-        if (conversationExists) {
-            throw new Error('Conversation already exists');
-        }
 
-        return await Conversation.create(conversation);
+        return await Conversation.create(payload);
     }
 
     async getConversationById(id) {
@@ -100,13 +95,21 @@ const ConversationRepository = new class {
             throw new Error('User id is empty');
         }
 
-        // get all conversations for the user
-        return await Conversation.findAll({
-            include: [{
-                model: User,
-                where: { id: userId }
-            }]
-        });
+        // make a list of all conversations for the user 
+        // using the userConversation model and filtering by the userId field
+        const userConversations = await UserConversation.findAll({ where: { userId } });
+
+        // make a list of all conversation ids for the user
+        const conversationIds = userConversations.map(userConversation => userConversation.conversationId);
+
+        // get all conversations for the user using the conversationIds list
+        return await Conversation.findAll({ where: { id: conversationIds } });
+        // return await Conversation.findAll({
+        //     include: [{
+        //         model: User,
+        //         where: { id: userId }
+        //     }]
+        // });
     }
 
     // use the UserConversation model to get all conversations for a user
