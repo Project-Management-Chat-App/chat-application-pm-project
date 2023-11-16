@@ -153,16 +153,21 @@ async function getUserProfile(req, res) {
 }
 
 async function logoutController(req, res) {
-    // destroy session
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({
-                "message": "Could not logout",
-            });
-        }
-        return res.status(200).json({
-            "message": "Logout successful",
+    // logout user controller
+    // uses middleware to check if user is authenticated, if not, it will not reach this controller and return http error 401
+    try {
+
+        // destroy session and cookie
+        req.session = null;
+
+    } catch (error) {
+        console.error("request or db error: ", error.message);
+        return res.status(500).json({
+            "message": "Could not logout",
         });
+    }
+    return res.status(200).json({
+        "message": "Logout successful",
     });
 }
 

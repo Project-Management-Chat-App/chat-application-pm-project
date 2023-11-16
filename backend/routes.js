@@ -26,7 +26,7 @@ router.post("/register", registerController);
 // the get user profile route, use authentication middleware
 router.get("/profile", validateUserIsAuthenticated, getUserProfile);
 
-router.post("/logout", logoutController, validateUserIsAuthenticated);
+router.post("/logout", validateUserIsAuthenticated, logoutController);
 
 // get a list of the conversations of the current user
 router.get("/conversations", function(req, res) {
