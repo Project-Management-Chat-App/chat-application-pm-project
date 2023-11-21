@@ -3,10 +3,11 @@ console.log("Hello World!");
 // import io from 'socket';
 
 
-import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+// import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
 // using es6 modules
 import $ from "jquery";
+import { io } from "socket.io-client";
 
 // do some jquery stuff
 // $('body').css('font-size', '1.15rem');
@@ -61,4 +62,3 @@ socket.on('chat message', (msg) => {
 
 });
 
-socket.listen(8081);
