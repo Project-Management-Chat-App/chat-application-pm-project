@@ -1,6 +1,5 @@
 
-// ---------------------------------------------------------------
-// express server
+// -------------------------------------------- express server
 const express = require('express');
 const expressApp = express();
 const expressPort = 8080;
