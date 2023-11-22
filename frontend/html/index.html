@@ -25,7 +25,7 @@
                 <div class="input-div">
                     <form id="form" class="form" action="">
                         <input id="input" maxlength="500" placeholder="Type a message..." />
-                        <button class="button">Send</button>
+                        <button class="button" type="submit">Send</button>
                     </form>
                 </div>
             </div>
@@ -45,60 +45,9 @@
         </div>
     </main>
 
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
-    <!-- <script src="../src/index.js"></script> -->
-
-    <!-- <script>
-        // create a socket.io instance and establish a connection to the server 
-        const socket = io();
-
-        // reference DOM items
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-        const messages = document.getElementById('messages');
-
-        // listen for form submission
-        form.addEventListener('submit', (e) => {
-            // prevent app page refresh on submission
-            e.preventDefault();
-
-            // check if the user entered a text message
-            if (input.value) {
-                const message = {
-                    type: 'text',
-                    content: input.value,
-                };
-
-                // "emit" the chat chat event with the message content
-                socket.emit('chat message', message);
-
-                // clear the text message input field
-                input.value = '';
-            }
-        });
-
-        // listening for incoming chat messages from the server
-        socket.on('chat message', (msg) => {
-            const messages = document.getElementById('messages');
-
-            // create a new list item to display the message
-            const item = document.createElement('p');
-
-            // if it's a text message, create a text message item
-            if (msg.type === 'text') {
-                item.textContent = msg.content;
-            }
-
-            // add the message item to the list of messages
-            messages.appendChild(item);
-
-            // message appears at the bottom of the screen
-            window.scrollTo(0, document.body.scrollHeight);
-        });
-    </script> -->
+    
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
-    <script src="/socket.io/socket.io.js"></script>
     <script src="bundle.js" type="module"></script>
 
 </body>

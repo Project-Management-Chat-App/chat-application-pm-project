@@ -1,12 +1,17 @@
-
-// -------------------------------------------- express server
+// -------------------------------------------- express server 
+// import express module and session module
 const express = require('express');
-const expressApp = express();
-const expressPort = 8080;
-const routes = require("./routes");
-
 const cookieSession = require('cookie-session');
 
+// import http routes module, it is in the same directory as this file named routes.js
+const routes = require("./routes");
+
+const expressPort = 8080; // port 8080 is the default port for express
+
+// initiate express
+const expressApp = express();
+
+// use cookie session
 expressApp.use(cookieSession({
     name: 'session',
     keys: ['key1', 'key2'],
@@ -17,13 +22,13 @@ expressApp.use(cookieSession({
     domain: 'localhost',
 }));
   
-
+// this is used to parse the request body on express server calls as json
 expressApp.use(express.json());
 
 // import routes module
 expressApp.use("", routes);
 
-
+// start the express server
 expressApp.listen(expressPort, () => {
     console.log(`listening on port ${expressPort}`);
 });
@@ -32,12 +37,12 @@ expressApp.listen(expressPort, () => {
 
 // ---------------------------------------------------------------
 // socket.io server
-const io = require('./socket/mainSocketController').socketIOServer;
+const io = require('./socket/mainSocketController').io;
 const httpServer = require('./socket/mainSocketController').httpServer;
 
-const socketIOPort = 8081;
+const socketIOPort = 8081; // port 8081 is the default port for socket.io
 
-
+// start the socket.io server on port 8081
 io.listen(socketIOPort, () => {
     console.log(`socket.io listening on port ${socketIOPort}`);
 });
