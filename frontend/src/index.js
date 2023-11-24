@@ -13,9 +13,10 @@ const socket = io('http://localhost:8081');
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
+// add author
 
 socket.on("connect_error", (err) => {
-//   console.log(`connect_error due to ${err.message}`);
+    //   console.log(`connect_error due to ${err.message}`);
 });
 
 socket.on("connect", () => {
@@ -41,7 +42,7 @@ form.addEventListener('submit', async (e) => {
 
         // "emit" the chat chat event with the message content, save the return value in a variable
         await socket.emit('create-new-message', message);
-        
+
         // clear the text message input field
         input.value = '';
     }
@@ -50,19 +51,27 @@ form.addEventListener('submit', async (e) => {
 // this listens for new messages from the server event "pull-messages-from-server"
 // the server triggers this event, for example on app refresh, or
 // when a new message is created
+
 socket.on('push-messages-to-client', (messagesArray) => {
 
     // remove all the messages from the DOM first
     messages.innerHTML = '';
 
     // loop through the messages array and display each message
-    for (let message of messagesArray ){
+    for (let message of messagesArray) {
         // create a new list item to display the message
         const item = document.createElement('p');
         const content = document.createElement('span');
         const breakLine = document.createElement('br');
         const author = document.createElement('strong');
-        
+
+        // Timestamp display 
+        // ---------------
+        const timestamp = document.createElement('p');
+        timestamp.textContent = new Date(message.dateCreated).toLocaleString();
+
+        // ----------------
+
         // if it's a text message, create a text message item
         if (message.conversationType === 'text') {
             // display the author as the first 5 characters of the socket id
@@ -73,6 +82,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
         item.appendChild(author);
         item.appendChild(breakLine);
         item.appendChild(content);
+        item.appendChild(timestamp);
 
         // add the message item to the list of messages
         messages.appendChild(item);
