@@ -39,13 +39,38 @@ const io = new Server(httpServer, {
     
 });
 
+// processes the Base64 image string
+function validateBase64ImageString(base64String) {
+    // putting a 5MB upload limit
+    const sizeLimit = 5 * 1024 * 1024;
+
+    // Calculate the size of the Base64 string
+    const stringLength = base64String.length - 'data:image/png;base64,'.length;
+    const sizeInBytes = 4 * Math.ceil((stringLength / 3))*0.5624896334383812;
+    // if the file size exceeds the limit don't allow
+    if (sizeInBytes > sizeLimit) {
+        return false; 
+    }
+
+    // Check for allowed image types (png, jpeg, gif)
+    if (!base64String.startsWith('data:image/png;base64,') && 
+        !base64String.startsWith('data:image/jpeg;base64,') && 
+        !base64String.startsWith('data:image/gif;base64,')) {
+            // if the image uploaded is not an accepted image type
+        return false; 
+    }
+
+    // image passes our requirements and can be sent as a message :)
+    return true;
+}
+
 // this is the main socket.io event listener, it scans for new connections
 // when a new connection is made, it will log a message to the console
 io.on('connection', async (socket) => {
     console.log('a user connected');
 
     // when a new connection is made, it will send the messageArray to the client
-    await socket.emit('push-messages-to-client', messageArray)
+    await socket.emit('push-messages-to-client', messageArray);
 
 
     // when a user disconnects, it will log a message to the console
@@ -63,6 +88,14 @@ io.on('connection', async (socket) => {
             conversation.conversationType = messageObj.conversationType;
         } else {
             conversation.conversationType = 'text';
+        }
+
+        if (messageObj.conversationType === 'image') {
+            const isValidImage = validateBase64ImageString(messageObj.content);
+            if (!isValidImage) {
+                // TODO handle invalid case by displaying problem to user?
+                return;
+            }
         }
 
         // add the rest of the conversation
