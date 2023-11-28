@@ -116,3 +116,16 @@ button:hover {
     margin: 10px 0;
     width: 60%;
 }
+
+/* timestamp styling here */
+.message-timestamp {
+    background-color: powderblue;
+}
+
+/* message content styling here */
+p .message-content {
+    background-color: silver;
+}
+
+
+

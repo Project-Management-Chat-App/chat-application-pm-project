@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { io } from "socket.io-client";
 
+
 // do some jquery stuff
 // $('body').css('font-size', '1.15rem');
 // $('body').css('font-family', 'sans-serif');
@@ -30,7 +31,6 @@ socket.on("connect", () => {
 });
 
 
-// listen for form submission
 // listen for form submission
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -85,10 +85,12 @@ socket.on('push-messages-to-client', (messagesArray) => {
     for (let message of messagesArray) {
         // create a new list item to display the message
         const item = document.createElement('p');
-        const content = document.createElement('span');
+        const content = document.createElement('p');
+        content.className = 'message-content';
         const breakLine = document.createElement('br');
         const author = document.createElement('strong');
-        const timestamp = document.createElement('p');
+        const timestamp = document.createElement('span');
+        timestamp.className = 'message-timestamp';
 
         // check if the message is today's message for timestamp formatting
         const messageDate = new Date(message.dateCreated);
