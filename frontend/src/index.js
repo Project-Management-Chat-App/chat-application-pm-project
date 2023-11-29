@@ -61,28 +61,16 @@ socket.on('push-messages-to-client', (messagesArray) => {
     for (let message of messagesArray) {
         // create a new list item to display the message
         const item = document.createElement('p');
-        const content = document.createElement('span');
+        const content = document.createElement('p');
+        content.className='message-content';
         const breakLine = document.createElement('br');
         const author = document.createElement('strong');
 
         // Timestamp display 
         // ---------------
-        const timestamp = document.createElement('p');
+        const timestamp = document.createElement('span');
+        timestamp.className = 'message-timestamp';
         timestamp.textContent = new Date(message.dateCreated).toLocaleString();
-
-        // timestamp.style.color = 'green';
-        // timestamp.style.fontSize = '12px';
-        // timestamp.style.marginTop = '5px';
-
-        timestamp.style.color = 'green'; // Change color to green
-        timestamp.style.fontSize = '12px';
-        timestamp.style.fontWeight = 'bold'; // Make it bold
-        timestamp.style.textAlign = 'right'; // Align to the right
-        timestamp.style.backgroundColor = '#f0f0f0';
-        timestamp.style.marginTop = '5px';
-        timestamp.style.marginRight = '10px';
-        timestamp.style.padding = '5px';
-
 
         // ----------------
 
