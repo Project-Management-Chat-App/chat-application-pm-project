@@ -43,11 +43,6 @@ const httpServer = require('./socket/mainSocketController').httpServer;
 
 const socketIOPort = 8081; // port 8081 is the default port for socket.io
 
-// io.use(cors({
-//     origin: "http://localhost:3000",
-//     methods: ["GET", "POST"],
-//     credentials: false
-// }));
 
 // start the socket.io server on port 8081
 io.listen(socketIOPort, () => {
