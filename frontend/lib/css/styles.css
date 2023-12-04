@@ -117,15 +117,43 @@ button:hover {
     width: 60%;
 }
 
-/* timestamp styling here */
+/* .message-timestamp {
+    background-color: white;
+    color: green;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    margin-top: 5px;
+    margin-right: 10px;
+    text-align: right;
+    font-weight: bold;
+} */
+
+.messages p {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    word-break: break-word;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
 .message-timestamp {
-    background-color: powderblue;
+    background-color: none;
+    color: green;
+    padding: 5px;
+    border-radius: 5px;
+    border-color: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    margin-top: 5px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
-
-/* message content styling here */
-p .message-content {
-    background-color: silver;
-}
-
-
 

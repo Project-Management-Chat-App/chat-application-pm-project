@@ -86,13 +86,15 @@ socket.on('push-messages-to-client', (messagesArray) => {
         // create a new list item to display the message
         const item = document.createElement('p');
         const content = document.createElement('p');
-        // *** add line below
-        content.className = 'message-content';
+
+        content.className='message-content';
+
         const breakLine = document.createElement('br');
         const author = document.createElement('strong');
         const timestamp = document.createElement('span');
         // *** add line below
         timestamp.className = 'message-timestamp';
+
 
         // check if the message is today's message for timestamp formatting
         const messageDate = new Date(message.dateCreated);
@@ -100,6 +102,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
         const isToday = messageDate.getDate() === today.getDate() &&
             messageDate.getMonth() === today.getMonth() &&
             messageDate.getFullYear() === today.getFullYear();
+
 
 
 
