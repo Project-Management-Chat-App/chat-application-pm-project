@@ -8,7 +8,8 @@ import { io } from "socket.io-client";
 // $('body').css('font-family', 'sans-serif');
 
 // create a socket.io instance and establish a connection to the server 
-const socket = io('http://localhost:8081');
+const socket = io('http://localhost:8081', {
+});
 
 
 // reference DOM items
@@ -22,7 +23,7 @@ const messages = document.getElementById('messages');
 let currentUserSocketId;
 
 socket.on("connect_error", (err) => {
-    //   console.log(`connect_error due to ${err.message}`);
+      console.log(`connect_error due to ${err.message}`);
 });
 
 socket.on("connect", () => {
@@ -43,14 +44,15 @@ form.addEventListener('submit', async (e) => {
 
     // Handle text message
     if (textMessage) {
-        await socket.emit('create-new-message', {
+        const myMessageObj = {
             conversationType: 'text',
-            content: textMessage,
+            content: input.value,
             dateCreated: Date.now(),
             dateUpdated: Date.now(),
             conversationId: 1,
             ownerId: 1
-        });
+        };
+        await socket.emit('create-new-message', myMessageObj);
         input.value = ''; // Clear the text input
     }
 
@@ -58,18 +60,21 @@ form.addEventListener('submit', async (e) => {
     if (imageFile) {
         const reader = new FileReader();
         reader.onloadend = async function () {
-            await socket.emit('create-new-message', {
+            const myMessageObj = {
                 conversationType: 'image',
                 content: reader.result, // Base64 string
                 dateCreated: Date.now(),
                 dateUpdated: Date.now(),
                 conversationId: 1,
                 ownerId: 1
-            });
+            };
+            
+            await socket.emit('create-new-message', myMessageObj);
             imageInput.value = ''; // Clear the image input
         };
-        reader.readAsDataURL(imageFile);
-    }
+        let imageName = reader.readAsDataURL(imageFile);
+        console.log("imageName: ", imageName);
+    } 
 });
 
 // this listens for new messages from the server event "pull-messages-from-server"

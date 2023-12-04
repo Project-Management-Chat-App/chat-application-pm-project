@@ -2,6 +2,7 @@
 // import express module and session module
 const express = require('express');
 const cookieSession = require('cookie-session');
+const cors = require("cors");
 
 // import http routes module, it is in the same directory as this file named routes.js
 const routes = require("./routes");
@@ -42,6 +43,12 @@ const httpServer = require('./socket/mainSocketController').httpServer;
 
 const socketIOPort = 8081; // port 8081 is the default port for socket.io
 
+io.use(cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: false
+}));
+
 // start the socket.io server on port 8081
 io.listen(socketIOPort, () => {
     console.log(`socket.io listening on port ${socketIOPort}`);
@@ -57,8 +64,8 @@ const sequelize = require('./database/sequelize');
 const connection = sequelize.sqlConnection;
 sequelize.syncDatabase();
 
-// sync the database
-connection.sync();
+// // sync the database
+// connection.sync();
 
 
 sequelize.testConnection();
