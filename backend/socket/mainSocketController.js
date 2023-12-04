@@ -34,8 +34,11 @@ const httpServer = createServer();
 // this will be used to add new socket.io events
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
-        methods: ["GET", "POST"]
+        origin: "*",
+        methods: ["GET", "POST"], 
+        allowAllHeaders: true,
+        credentials: false
+        
     },
     rejectUnauthorized: false,
 });
