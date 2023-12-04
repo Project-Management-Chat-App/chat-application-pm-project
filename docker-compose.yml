@@ -6,7 +6,7 @@ services:
       dockerfile: local.Dockerfile
     container_name: chat-app-backend
     ports:
-      - "8080:8080" # for express
+      # - "8080:8080" # for express
       - "8081:8081" # for socket.io
     volumes:
       - ./backend:/app

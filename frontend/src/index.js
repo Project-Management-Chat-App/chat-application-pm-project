@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 // $('body').css('font-family', 'sans-serif');
 
 // create a socket.io instance and establish a connection to the server 
-const socket = io('http://localhost:8081');
+const socket = io('http://backend:8081');
 
 
 // reference DOM items

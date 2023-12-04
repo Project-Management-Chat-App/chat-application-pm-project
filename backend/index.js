@@ -1,38 +1,38 @@
-// -------------------------------------------- express server 
-// import express module and session module
-const express = require('express');
-const cookieSession = require('cookie-session');
-const cors = require("cors");
+// // -------------------------------------------- express server 
+// // import express module and session module
+// const express = require('express');
+// const cookieSession = require('cookie-session');
+// const cors = require("cors");
 
-// import http routes module, it is in the same directory as this file named routes.js
-const routes = require("./routes");
+// // import http routes module, it is in the same directory as this file named routes.js
+// const routes = require("./routes");
 
-const expressPort = 8080; // port 8080 is the default port for express
+// const expressPort = 8080; // port 8080 is the default port for express
 
-// initiate express
-const expressApp = express();
+// // initiate express
+// const expressApp = express();
 
-// use cookie session
-expressApp.use(cookieSession({
-    name: 'session',
-    keys: ['key1', 'key2'],
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    path: '/',
-    httpOnly: true,
-    secure: false,
-    domain: 'localhost',
-}));
+// // use cookie session
+// expressApp.use(cookieSession({
+//     name: 'session',
+//     keys: ['key1', 'key2'],
+//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     path: '/',
+//     httpOnly: true,
+//     secure: false,
+//     domain: 'localhost',
+// }));
   
-// this is used to parse the request body on express server calls as json
-expressApp.use(express.json());
+// // this is used to parse the request body on express server calls as json
+// expressApp.use(express.json());
 
-// import routes module
-expressApp.use("", routes);
+// // import routes module
+// expressApp.use("", routes);
 
-// start the express server
-expressApp.listen(expressPort, () => {
-    console.log(`listening on port ${expressPort}`);
-});
+// // start the express server
+// expressApp.listen(expressPort, () => {
+//     console.log(`listening on port ${expressPort}`);
+// });
 
 
 
