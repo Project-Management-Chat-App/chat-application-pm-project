@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid'); // Import the uuid module
 // const { writeFile } = require("fs");
 
 // Directory where images will be stored
-const imagesDir = path.join(__dirname, 'public', 'images');
+const imagesDir = path.join(__dirname, "..", 'public', 'images');
 
 // Ensure the images directory exists
 function ensureImageDirectoryExists() {
@@ -88,23 +88,31 @@ io.on('connection', async (socket) => {
 
     // this will allow us to handle file upoads
     socket.on("image-upload", (file, callback) => {
-        console.log("upladed image file", file)
+        // console.log("upladed image file", file)
 
         
         
         // add an image name as unique id using UUID library
-        let imageName = `${uuidv4()}.png`;  
+        let newImageName = `${uuidv4()}.png`;  
         
         // Ensure the imageName is defined
-        if (!imageName) {
+        if (!newImageName) {
             callback({ message: "failure", imageName: "" });
             return;
         }
 
+        // Construct the full file path including the imageName
+        const filePath = path.join(imagesDir, newImageName);
+
         // Save the content to the disk
-        fs.writeFile(imagesDir, file, (err) => {
-            // Return the imageName in the callback
-            callback({ message: err.message.length >= 0  ? "failure" : "success", imageName: imageName });
+        fs.writeFile(filePath, file, (err) => {
+            if (err) {
+                // Return an error message if there's an issue in writing the file
+                callback({ message: "failure", imageName: "", error: err.message });
+            } else {
+                // Return success message and the imageName
+                callback({ message: "success", imageName: newImageName, error: "" });
+            }
         });
     })
 
