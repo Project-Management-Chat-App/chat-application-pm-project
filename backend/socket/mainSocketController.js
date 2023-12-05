@@ -2,30 +2,24 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
+// for saving files:
+const fs = require('fs');
+const path = require('path');
+
+// Directory where images will be stored
+const imagesDir = path.join(__dirname, 'public', 'images');
+
+// Ensure the images directory exists
+function ensureImageDirectoryExists() {
+
+    if (!fs.existsSync(imagesDir)){
+        fs.mkdirSync(imagesDir, { recursive: true });
+    }
+}
+
 // import the message repository
 const MessageRepository = require('../repositories/message.repository');
 
-// // make a dummy conversationObj array to store conversations, this will be provisional while we make the database sync
-// let messageArray = [
-//     {
-//         conversationType: 'text',
-//         content: 'hello',
-//         dateCreated: Date.now(),
-//         dateUpdated: Date.now(),
-//         conversationId: 1,
-//         author: 'asdasd',
-//         ownerId: 1
-//     },
-//     {
-//         conversationType: 'text',
-//         content: 'world',
-//         dateCreated: Date.now(),
-//         dateUpdated: Date.now(),
-//         conversationId: 1,
-//         author: 'dssdsd',
-//         ownerId: 1
-//     }
-// ];
 
 // in general, this is an HTTP server that will be used by socket.io, among other things
 const httpServer = createServer();
@@ -105,11 +99,32 @@ io.on('connection', async (socket) => {
         }
 
         if (messageObj.messageType === 'image') {
-            const isValidImage = validateBase64ImageString(messageObj.content);
+            const isValidImage = validateBase64ImageString(messageObj.imagePath);
             if (!isValidImage) {
                 // TODO handle invalid case by displaying problem to user?
+                console.log("the image is not valid")
                 return;
             }
+
+            // verify that the directory exist:
+            ensureImageDirectoryExists();
+
+            // start preparing to save the image
+            const base64Data = messageObj.imagePath.replace(/^data:image\/\w+;base64,/, '');
+            const dataBuffer = Buffer.from(base64Data, 'base64');
+            const imageName = `image-${Date.now()}.png`;
+
+            fs.writeFile(path.join(imagesDir, imageName), dataBuffer, (err) => {
+                if (err) {
+                    console.log('Error saving the image:', err);
+                    // Handle error
+                } else {
+                    console.log('Image saved:', imageName);
+                    // Update the message object with the URL of the saved image
+                    newMessage.imagePath = `http://localhost:8080/images/${imageName}`;
+                    newMessage.content = `http://localhost:8080/images/${imageName}`;
+                }
+            });
         }
 
         // add the rest of the newMessage

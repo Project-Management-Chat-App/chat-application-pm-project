@@ -47,24 +47,22 @@ form.addEventListener('submit', async (e) => {
             dateUpdated: Date.now(),
             // conversationId: 1,
             // ownerId: 1
-            // author: "user1",
+            author: localStorage.getItem("author"),
         };
         await socket.emit('create-new-message', myMessageObj);
         input.value = ''; // Clear the text input
-    }
-
-    // Handle image file
-    if (imageFile) {
+    } else if (imageFile) {
+        // Handle image file
         const reader = new FileReader();
         reader.onloadend = async function () {
             const myMessageObj = {
                 conversationType: 'image',
-                content: reader.result, // Base64 string
+                imagePath: reader.result, // Base64 string
                 dateCreated: Date.now(),
                 dateUpdated: Date.now(),
                 // conversationId: 1,
                 // ownerId: 1
-                // author: "user1",
+                author: localStorage.getItem("author"),
 
             };
             
@@ -123,7 +121,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
         // if it's a text message, create a text message item
         if (message.messageType === 'text') {
             // display the author as the first 5 characters of the socket id
-            author.textContent = new String(message.author).substring(0, 5) + " wrote: ";
+            author.textContent = new String(message.author) + " wrote: ";
             content.textContent = message.content;
         }
 
@@ -137,7 +135,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
 
         // assign the correct color to the message
         // (self = 
-        if (message.author.startsWith(currentUserSocketId)) {
+        if (message.author.startsWith(localStorage.getItem('author'))) {
             // self messages
             item.style.backgroundColor = 'lightsteelblue';
         } else {
@@ -157,4 +155,36 @@ socket.on('push-messages-to-client', (messagesArray) => {
 
     // message appears at the bottom of the screen
     window.scrollTo(0, document.body.scrollHeight);
+});
+
+// use jquery to change the author name, and localstorage
+$(document).ready(function() {
+    // Check if a value is already stored in localStorage
+    let  storedAuthor = localStorage.getItem('author');
+    if (storedAuthor) {
+        // Set the input value to the stored value
+        $('#author-input').val(storedAuthor);
+    } else {
+        storedAuthor = "author";
+        // Set the default value if nothing is stored
+        $('#author-input').val(storedAuthor);
+        // Save to localstorage
+        localStorage.setItem('author', storedAuthor);
+
+    }
+
+    // Event listener for the button click
+    $('#author-change-btn').click(function() {
+        // Get the value from the input field
+        var author = $('#author-input').val();
+
+        // Store the value in localStorage
+        localStorage.setItem('author', author);
+
+        $('#author-save-feedback').text('Author name saved');
+        // Clear the feedback message after a few seconds
+        setTimeout(function() {
+            $('#author-save-feedback').text('');
+        }, 3000); // Clears the feedback after 3 seconds
+    });
 });
