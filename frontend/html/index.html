@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="icons/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <title>Chat App</title>
 </head>
@@ -25,6 +26,10 @@
                 <div class="input-div">
                     <form id="form" class="form" action="">
                         <input id="input" maxlength="500" placeholder="Type a message..." />
+
+                        <!-- browse for image file button -->
+                        <input type="file" id="imageInput" accept="image/png, image/jpeg, image/gif">
+
                         <button class="button" type="submit">Send</button>
                     </form>
                 </div>
