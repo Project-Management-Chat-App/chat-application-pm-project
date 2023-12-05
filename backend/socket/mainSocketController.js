@@ -6,7 +6,6 @@ const { Server } = require("socket.io");
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid'); // Import the uuid module
-// const { writeFile } = require("fs");
 
 // Directory where images will be stored
 const imagesDir = path.join(__dirname, "..", 'public', 'images');
@@ -38,35 +37,34 @@ const io = new Server(httpServer, {
 });
 
 
-// processes the Base64 image string
-function validateBase64ImageString(base64String) {
-    // putting a 5MB upload limit
-    const sizeLimit = 5 * 1024 * 1024;
+// // processes the Base64 image string
+// function validateBase64ImageString(base64String) {
+//     // putting a 5MB upload limit
+//     const sizeLimit = 5 * 1024 * 1024;
 
-    // Calculate the size of the Base64 string
-    const stringLength = base64String.length - 'data:image/png;base64,'.length;
-    const sizeInBytes = 4 * Math.ceil((stringLength / 3))*0.5624896334383812;
-    // if the file size exceeds the limit don't allow
-    if (sizeInBytes > sizeLimit) {
-        return false; 
-    }
+//     // Calculate the size of the Base64 string
+//     const stringLength = base64String.length - 'data:image/png;base64,'.length;
+//     const sizeInBytes = 4 * Math.ceil((stringLength / 3))*0.5624896334383812;
+//     // if the file size exceeds the limit don't allow
+//     if (sizeInBytes > sizeLimit) {
+//         return false; 
+//     }
 
-    // Check for allowed image types (png, jpeg, gif)
-    if (!base64String.startsWith('data:image/png;base64,') && 
-        !base64String.startsWith('data:image/jpeg;base64,') && 
-        !base64String.startsWith('data:image/gif;base64,')) {
-            // if the image uploaded is not an accepted image type
-        return false; 
-    }
+//     // Check for allowed image types (png, jpeg, gif)
+//     if (!base64String.startsWith('data:image/png;base64,') && 
+//         !base64String.startsWith('data:image/jpeg;base64,') && 
+//         !base64String.startsWith('data:image/gif;base64,')) {
+//             // if the image uploaded is not an accepted image type
+//         return false; 
+//     }
 
-    // image passes our requirements and can be sent as a message :)
-    return true;
-}
+//     // image passes our requirements and can be sent as a message :)
+//     return true;
+// }
 
 // this is the main socket.io event listener, it scans for new connections
 // when a new connection is made, it will log a message to the console
 io.on('connection', async (socket) => {
-    console.log('a user connected');
 
     try {
 
@@ -77,7 +75,7 @@ io.on('connection', async (socket) => {
         await socket.emit('push-messages-to-client', messageArray)
         
     } catch (e) {
-        console.log("error at initial pull of messages", e);
+        await socket.emit('push-messages-to-client', [])
 
     }
 
@@ -166,8 +164,7 @@ io.on('connection', async (socket) => {
             // use the database to store the messages
             // and the repository pattern to access the database CRUD operations
             await MessageRepository.createMessage(newMessage);
-
-            // console.log("after save message");            
+        
             
             // get the updated message array from the database
             let updatedMessageArray = await MessageRepository.getAllMessages();

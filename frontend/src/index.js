@@ -2,9 +2,6 @@
 import $ from "jquery";
 import { io } from "socket.io-client";
 
-// do some jquery stuff
-// $('body').css('font-size', '1.15rem');
-// $('body').css('font-family', 'sans-serif');
 
 // create a socket.io instance and establish a connection to the server 
 const socket = io('http://localhost:8081');
@@ -19,7 +16,7 @@ const messages = document.getElementById('messages');
 let currentUserSocketId;
 
 socket.on("connect_error", (err) => {
-    //   console.log(`connect_error due to ${err.message}`);
+      console.log(`connect_error due to ${err.message}`);
 });
 
 socket.on("connect", () => {
@@ -45,10 +42,6 @@ form.addEventListener('submit', async (e) => {
 
 
         await socket.emit("image-upload", imageInput.files[0], async (status) => {
-            // sendUploadImageResponse = await status;
-
-            // console.log("status inside the callback on socket emit upload: ", sendUploadImageResponse);
-            // let newImageName = await status?.imageName;
             
     
             const myMessageObj = {
@@ -61,9 +54,6 @@ form.addEventListener('submit', async (e) => {
                 author: localStorage.getItem("author"),
     
             };
-    
-            console.log("new msg obj", myMessageObj);
-    
             
             await socket.emit('create-new-message', myMessageObj);
             input.value = ''; // Clear the text input
@@ -98,42 +88,45 @@ socket.on('push-messages-to-client', (messagesArray) => {
     // remove all the messages from the DOM first
     messages.innerHTML = '';
 
-    // loop through the messages array and display each message
-    for (let message of messagesArray) {
-        // create a new list item to display the message
-        const item = document.createElement('p');
-        item.classList.add("flex-col")
-        const content = document.createElement('p');
+    if (messagesArray) {
 
-        content.className='message-content';
-
-        const breakLine = document.createElement('br');
-        const author = document.createElement('strong');
-        const timestamp = document.createElement('span');
-        // *** add line below
-        timestamp.className = 'message-timestamp';
-
-
-        // check if the message is today's message for timestamp formatting
-        const messageDate = new Date(message.dateCreated);
-        const today = new Date();
-        const isToday = messageDate.getDate() === today.getDate() &&
+        
+        // loop through the messages array and display each message
+        for (let message of messagesArray) {
+            // create a new list item to display the message
+            const item = document.createElement('p');
+            item.classList.add("flex-col")
+            const content = document.createElement('p');
+            
+            content.className='message-content';
+            
+            const breakLine = document.createElement('br');
+            const author = document.createElement('strong');
+            const timestamp = document.createElement('span');
+            // *** add line below
+            timestamp.className = 'message-timestamp';
+            
+            
+            // check if the message is today's message for timestamp formatting
+            const messageDate = new Date(message.dateCreated);
+            const today = new Date();
+            const isToday = messageDate.getDate() === today.getDate() &&
             messageDate.getMonth() === today.getMonth() &&
             messageDate.getFullYear() === today.getFullYear();
-
-
-
-
-        // Formatting the date and time
-        const timeFormatOptions = { hour: 'numeric', minute: 'numeric' };
-        const dateFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
-        if (isToday) {
+            
+            
+            
+            
+            // Formatting the date and time
+            const timeFormatOptions = { hour: 'numeric', minute: 'numeric' };
+            const dateFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+            if (isToday) {
             timestamp.textContent = messageDate.toLocaleTimeString([], timeFormatOptions);
         } else {
             timestamp.textContent = messageDate.toLocaleDateString([], dateFormatOptions) + ', ' +
-                messageDate.toLocaleTimeString([], timeFormatOptions);
+            messageDate.toLocaleTimeString([], timeFormatOptions);
         }
-
+        
         
         // if it's a text message, create a text message item
         if (message.messageType === 'text') {
@@ -151,7 +144,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
             item.appendChild(author);
             
             
-
+            
             const image = document.createElement('img');
             image.classList.add("msg-img")
             // the image's base64 string
@@ -159,7 +152,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
             image.alt = message.imageAlt;
             item.appendChild(image);
         }
-
+        
         // assign the correct color to the message
         if (message.author.startsWith(localStorage.getItem('author'))) {
             // self messages
@@ -168,17 +161,18 @@ socket.on('push-messages-to-client', (messagesArray) => {
             // others' messages
             item.style.backgroundColor = 'peachpuff';
         }
-
-
         
+        
+        // add timestamp
         item.appendChild(timestamp);
-
+        
         // add the message item to the list of messages
         messages.appendChild(item);
+        }
+        
+        // message appears at the bottom of the screen
+        window.scrollTo(0, document.body.scrollHeight);
     }
-
-    // message appears at the bottom of the screen
-    window.scrollTo(0, document.body.scrollHeight);
 });
 
 // use jquery to change the author name, and localstorage
