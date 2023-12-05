@@ -148,3 +148,15 @@ button:hover {
     font-size: 1.2rem;
     color: red;
 }
+
+
+.msg-img {
+    max-width: 400px;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 15px;
+}

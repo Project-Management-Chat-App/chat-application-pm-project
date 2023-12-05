@@ -102,6 +102,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
     for (let message of messagesArray) {
         // create a new list item to display the message
         const item = document.createElement('p');
+        item.classList.add("flex-col")
         const content = document.createElement('p');
 
         content.className='message-content';
@@ -133,13 +134,26 @@ socket.on('push-messages-to-client', (messagesArray) => {
                 messageDate.toLocaleTimeString([], timeFormatOptions);
         }
 
+        
         // if it's a text message, create a text message item
         if (message.messageType === 'text') {
-            // display the author as the first 5 characters of the socket id
+            // add message authorship span text
             author.textContent = new String(message.author) + " wrote: ";
+            item.appendChild(author);
+            item.appendChild(breakLine);
+            item.appendChild(content);
+            
+            // display the author as the first 5 characters of the socket id
             content.textContent = message.content;
         } else if (message.messageType === 'image') {
+            // add message authorship span text
+            author.textContent = new String(message.author) + " sent: ";
+            item.appendChild(author);
+            
+            
+
             const image = document.createElement('img');
+            image.classList.add("msg-img")
             // the image's base64 string
             image.src = message.imagePath;
             image.alt = message.imageAlt;
@@ -147,7 +161,6 @@ socket.on('push-messages-to-client', (messagesArray) => {
         }
 
         // assign the correct color to the message
-        // (self = 
         if (message.author.startsWith(localStorage.getItem('author'))) {
             // self messages
             item.style.backgroundColor = 'lightsteelblue';
@@ -157,9 +170,7 @@ socket.on('push-messages-to-client', (messagesArray) => {
         }
 
 
-        item.appendChild(author);
-        item.appendChild(breakLine);
-        item.appendChild(content);
+        
         item.appendChild(timestamp);
 
         // add the message item to the list of messages
