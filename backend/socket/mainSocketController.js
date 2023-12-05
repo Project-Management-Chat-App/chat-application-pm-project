@@ -86,7 +86,6 @@ io.on('connection', async (socket) => {
 
     // this will allow us to handle file upoads
     socket.on("image-upload", (file, callback) => {
-        // console.log("upladed image file", file)
 
         try {
             
@@ -128,8 +127,6 @@ io.on('connection', async (socket) => {
     socket.on('create-new-message', async (messageObj) => {
         // use interface to type the messageObj
         let newMessage = new Object();
-
-        console.log(messageObj)
 
         // check if the user entered a text message correctly, only text, image, and file are allowed, else default to text
         if (messageObj.messageType === 'text' || messageObj.messageType === 'image' || messageObj.messageType === 'file') {
