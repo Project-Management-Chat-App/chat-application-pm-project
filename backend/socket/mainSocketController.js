@@ -34,13 +34,11 @@ const httpServer = createServer();
 // this will be used to add new socket.io events
 const io = new Server(httpServer, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"], 
-        allowAllHeaders: true,
+        origin: ["http://localhost:3000","http://127.0.0.1:3000", "http://172.20.0.2:3000", "http://frontend:3000"],
+        methods: ["GET", "POST"],
         credentials: false
         
     },
-    rejectUnauthorized: false,
 });
 
 // processes the Base64 image string

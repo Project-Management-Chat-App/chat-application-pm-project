@@ -1,36 +1,36 @@
 version: '3'
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: local.Dockerfile
-    container_name: chat-app-backend
-    ports:
-      # - "8080:8080" # for express
-      - "8081:8081" # for socket.io
-    volumes:
-      - ./backend:/app
-      - node_modules_backend:/app/node_modules
-    networks:
-      - chat_app_network
-    env_file:
-      - ./backend/.env
-    depends_on:
-      database:
-        condition: service_healthy
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: local.Dockerfile
+  #   container_name: chat-app-backend
+  #   ports:
+  #     # - "8080:8080" # for express
+  #     - "8081:8081" # for socket.io
+  #   volumes:
+  #     - ./backend:/app
+  #     - node_modules_backend:/app/node_modules
+  #   networks:
+  #     - chat_app_network
+  #   env_file:
+  #     - ./backend/.env
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: local.Dockerfile
-    container_name: chat-app-frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - node_modules_frontend:/app/node_modules
-    networks:
-      - chat_app_network
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: local.Dockerfile
+  #   container_name: chat-app-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend:/app
+  #     - node_modules_frontend:/app/node_modules
+  #   networks:
+  #     - chat_app_network
 
   database:
     image: postgres:latest
@@ -61,8 +61,8 @@ services:
     networks:
       - chat_app_network
 
-volumes:
-  node_modules_frontend:
-  node_modules_backend:
+# volumes:
+#   node_modules_frontend:
+#   node_modules_backend:
 networks:
   chat_app_network:

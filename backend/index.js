@@ -2,7 +2,7 @@
 // // import express module and session module
 // const express = require('express');
 // const cookieSession = require('cookie-session');
-// const cors = require("cors");
+const cors = require("cors");
 
 // // import http routes module, it is in the same directory as this file named routes.js
 // const routes = require("./routes");
@@ -40,6 +40,8 @@
 // socket.io server
 const io = require('./socket/mainSocketController').io;
 const httpServer = require('./socket/mainSocketController').httpServer;
+
+
 
 const socketIOPort = 8081; // port 8081 is the default port for socket.io
 

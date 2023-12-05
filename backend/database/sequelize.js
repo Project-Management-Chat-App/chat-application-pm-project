@@ -4,7 +4,8 @@
 const { Sequelize } = require('sequelize');
 
 // pass the .env variables to the connection string
-const CONN_STRING = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`;
+// const CONN_STRING = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`;
+const CONN_STRING = `postgres://postgres:mysecretpassword@localhost:5432/chat_app_db`;
 
 const sqlConnection = new Sequelize(CONN_STRING,{
     dialect: 'postgres',
