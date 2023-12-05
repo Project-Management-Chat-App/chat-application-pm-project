@@ -36,8 +36,8 @@ const config = {
                 // copies all assets in the lib/ folder (images, etc) to /build (in case not imported manually via SCSS or CSS or JS). Any images referenced in SASS or CSS via url() or imported directly with js will be copied over automatically to /build root and given distinct filename - a little redundant :(
                 {from:'lib/', to:'', noErrorOnMissing: true},
                 // // copies HTML file to /build
-                {from:'html/index.html', to:'/app/index.html'},
-                {from:'html/error-404.html', to:'/app/error-404.html'},
+                {from:'./html/index.html', to:'index.html'},
+                {from:'./html/error.html', to:'error.html'},
             ]
         }),
     ],
@@ -47,18 +47,18 @@ const config = {
         // static: {
         //     directory: path.join(__dirname, 'build'),
         // },
-        // devMiddleware: {
-        //     publicPath: '/',
-        //     writeToDisk: true,
-        // },
+        devMiddleware: {
+            publicPath: '/',
+            writeToDisk: true,
+        },
         onAfterSetupMiddleware: function (devServer) {
             const app = devServer.app;
             app.get('/', function (req, res) {
-              res.sendFile(path.join(__dirname, 'index.html'));
+              res.sendFile(path.join(__dirname, 'build/index.html'));
             });
             // ... more routes
             app.get('*', function (req, res) {
-              res.sendFile(path.join(__dirname, 'error-404.html'));
+                res.sendFile(path.join(__dirname, 'build/error.html'));
             });
           },
     },
