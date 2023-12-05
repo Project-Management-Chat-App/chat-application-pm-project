@@ -55,7 +55,7 @@ const sequelize = require('./database/sequelize');
 
 
 // const connection = sequelize.sqlConnection;
-// sequelize.syncDatabase();
+sequelize.syncDatabase();
 
 // // sync the database
 // connection.sync();

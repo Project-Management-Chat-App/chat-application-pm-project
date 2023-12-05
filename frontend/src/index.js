@@ -121,13 +121,13 @@ socket.on('push-messages-to-client', (messagesArray) => {
         }
 
         // if it's a text message, create a text message item
-        if (message.conversationType === 'text') {
+        if (message.messageType === 'text') {
             // display the author as the first 5 characters of the socket id
             author.textContent = new String(message.author).substring(0, 5) + " wrote: ";
             content.textContent = message.content;
         }
 
-        if (message.conversationType === 'image') {
+        if (message.messageType === 'image') {
             const image = document.createElement('img');
             // the image's base64 string
             image.src = message.content;
