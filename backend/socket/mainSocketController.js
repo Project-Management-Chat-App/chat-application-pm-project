@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 // for saving files:
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid'); // Import the uuid module
 
 // Directory where images will be stored
 const imagesDir = path.join(__dirname, 'public', 'images');
@@ -112,7 +113,8 @@ io.on('connection', async (socket) => {
             // start preparing to save the image
             const base64Data = messageObj.imagePath.replace(/^data:image\/\w+;base64,/, '');
             const dataBuffer = Buffer.from(base64Data, 'base64');
-            const imageName = `image-${Date.now()}.png`;
+            const imageName = `${uuidv4()}.png`; // Generate a unique filename using UUID
+
 
             fs.writeFile(path.join(imagesDir, imageName), dataBuffer, (err) => {
                 if (err) {
@@ -122,7 +124,7 @@ io.on('connection', async (socket) => {
                     console.log('Image saved:', imageName);
                     // Update the message object with the URL of the saved image
                     newMessage.imagePath = `http://localhost:8080/images/${imageName}`;
-                    newMessage.content = `http://localhost:8080/images/${imageName}`;
+                    newMessage.imageAlt = messageObj.content;
                 }
             });
         }
@@ -170,4 +172,5 @@ io.on('connection', async (socket) => {
 module.exports = {
     io,
     httpServer,
+    ensureImageDirectoryExists,
 }

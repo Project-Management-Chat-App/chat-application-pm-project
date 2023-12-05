@@ -8,6 +8,9 @@ const routes = require("./routes");
 
 const expressPort = 8080; // port 8080 is the default port for express
 
+// this will be needed to ensure that we have a public directory in our project
+const ensureImageDirectoryExists = require("./socket/mainSocketController").ensureImageDirectoryExists;
+
 // imports for retrieving public images
 const fs = require('fs');
 const path = require('path');
@@ -33,8 +36,12 @@ expressApp.use(express.json());
 // import routes module
 expressApp.use("", routes);
 
+// make sure we have a public image directory
+ensureImageDirectoryExists();
+
 // Serve static files from the public directory
 expressApp.use(express.static(path.join(__dirname, 'public')));
+
 
 // start the express server
 expressApp.listen(expressPort, () => {

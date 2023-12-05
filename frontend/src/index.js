@@ -128,8 +128,8 @@ socket.on('push-messages-to-client', (messagesArray) => {
         if (message.messageType === 'image') {
             const image = document.createElement('img');
             // the image's base64 string
-            image.src = message.content;
-            image.alt = 'Received image';
+            image.src = message.imagePath;
+            image.alt = message.imageAlt;
             item.appendChild(image);
         }
 
