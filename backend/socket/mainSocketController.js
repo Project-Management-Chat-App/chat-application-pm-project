@@ -81,7 +81,7 @@ io.on('connection', async (socket) => {
         await socket.emit('push-messages-to-client', messageArray)
         
     } catch (e) {
-        console.log("error at initial pull of messages", updatedMessageArray);
+        console.log("error at initial pull of messages", e);
 
     }
 
