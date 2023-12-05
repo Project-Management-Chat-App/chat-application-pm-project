@@ -27,23 +27,6 @@ socket.on("connect", () => {
 });
 
 
-function upload(file) {
-    socket.emit("image-upload", file, (status) => {
-        sendUploadImageResponse = status;
-        console.log("status inside the callback on socket emit upload: ", status);
-    });
-}
-
-// imageInput.addEventListener("change", (e) => {
-//     file = e;
-//     console.log(file);
-
-//     // upload(file);
-
-//     // console.log(e.target)
-  
-// })
-
 // listen for form submission
 form.addEventListener('submit', async (e) => {
     // prevent app page refresh on submission
@@ -57,68 +40,53 @@ form.addEventListener('submit', async (e) => {
 
     // Handle text message
     if (imageFile) {
-        console.log("sending an image")
-        // Handle image file
-        // const reader = new FileReader();
-        // console.log("reader: ", reader)
-        
-        // reader.onloadend = async function () {
-            
-        // };
 
-        let sendUploadImageResponse = {};
+        let sendUploadImageResponse = new Object();
 
 
         await socket.emit("image-upload", imageInput.files[0], async (status) => {
-            sendUploadImageResponse = await status;
-            console.log("status inside the callback on socket emit upload: ", sendUploadImageResponse);
-        });
+            // sendUploadImageResponse = await status;
 
-        // console.log("send request response: ", sendUploadImageResponse);
-
-
-        // console.log("new name with uuid: ", sendUploadImageResponse?.imageName)
-        // console.log("send request response: ", sendUploadImageResponse?.message)
-
+            // console.log("status inside the callback on socket emit upload: ", sendUploadImageResponse);
+            // let newImageName = await status?.imageName;
+            
+    
+            const myMessageObj = {
+                messageType: 'image',
+                imagePath: status?.imageName, // the image string from the response
+                imageAlt: input.value,
+                content: input.value || "Default alt",
+                dateCreated: Date.now(),
+                dateUpdated: Date.now(),
+                author: localStorage.getItem("author"),
+    
+            };
+    
+            console.log("new msg obj", myMessageObj);
+    
+            
+            await socket.emit('create-new-message', myMessageObj);
+            input.value = ''; // Clear the text input
+    
+            
+    
+            imageInput.value = ''; // Clear the image input
+        })
         
 
-        // console.log("status in the send upload response obj: ", sendUploadImageResponse)
-
-        const newImageName = await sendUploadImageResponse?.imageName;
-
-        const myMessageObj = {
-            conversationType: 'image',
-            imagePath: newImageName, // Base64 string
-            content: input.value,
-            dateCreated: Date.now(),
-            dateUpdated: Date.now(),
-            author: localStorage.getItem("author"),
-
-        };
-
-        console.log("new msg obj", myMessageObj);
-
         
-        await socket.emit('create-new-message', myMessageObj);
-        
-        // console.log("imageName: ", imageName);
-        // console.log("image file: ", imageFile);
-
-        imageInput.value = ''; // Clear the image input
     } else if (textMessage) {
         const myMessageObj = {
-            conversationType: 'text',
+            messageType: 'text',
             content: input.value,
             dateCreated: Date.now(),
             dateUpdated: Date.now(),
-            // conversationId: 1,
-            // ownerId: 1
             author: localStorage.getItem("author"),
         };
         await socket.emit('create-new-message', myMessageObj);
         input.value = ''; // Clear the text input
     }
-    
+
 });
 
 // this listens for new messages from the server event "pull-messages-from-server"

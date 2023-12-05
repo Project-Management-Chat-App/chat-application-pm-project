@@ -90,30 +90,40 @@ io.on('connection', async (socket) => {
     socket.on("image-upload", (file, callback) => {
         // console.log("upladed image file", file)
 
-        
-        
-        // add an image name as unique id using UUID library
-        let newImageName = `${uuidv4()}.png`;  
-        
-        // Ensure the imageName is defined
-        if (!newImageName) {
-            callback({ message: "failure", imageName: "" });
-            return;
-        }
+        try {
+            
+            // add an image name as unique id using UUID library
+            let newImageName = `${uuidv4()}.png`;  
 
-        // Construct the full file path including the imageName
-        const filePath = path.join(imagesDir, newImageName);
-
-        // Save the content to the disk
-        fs.writeFile(filePath, file, (err) => {
-            if (err) {
-                // Return an error message if there's an issue in writing the file
-                callback({ message: "failure", imageName: "", error: err.message });
-            } else {
-                // Return success message and the imageName
-                callback({ message: "success", imageName: newImageName, error: "" });
+            if (file.type == "image/jpeg") {
+                let newImageName = `${uuidv4()}.jpg`;  
             }
-        });
+            
+            // Ensure the imageName is defined
+            if (!newImageName) {
+                callback({ message: "failure", imageName: "", error: "could not create new image" });
+                return;
+            }
+
+            // Construct the full file path including the imageName
+            const filePath = path.join(imagesDir, newImageName);
+
+            // // ensure directory exists
+            ensureImageDirectoryExists()
+
+            // Save the content to the disk
+            fs.writeFile(filePath, file, (err) => {
+                if (err) {
+                    // Return an error message if there's an issue in writing the file
+                    callback({ message: "failure", imageName: "", error: err.message });
+                } else {
+                    // Return success message and the imageName
+                    callback({ message: "success", imageName: newImageName, error: "" });
+                }
+            });
+        } catch (e) {
+            console.log("error on image upload: ", e)
+        }
     })
 
     // listening for incoming chat messages from the server
@@ -131,33 +141,9 @@ io.on('connection', async (socket) => {
         }
 
         if (messageObj.messageType === 'image') {
-            // const isValidImage = validateBase64ImageString(messageObj.imagePath);
-            // if (!isValidImage) {
-            //     // TODO handle invalid case by displaying problem to user?
-            //     console.log("the image is not valid")
-            //     return;
-            // }
-
-            // verify that the directory exist:
-            ensureImageDirectoryExists();
-
-            // start preparing to save the image
-            // const base64Data = messageObj.imagePath.replace(/^data:image\/\w+;base64,/, '');
-            // const dataBuffer = Buffer.from(base64Data, 'base64');
-            const imageName = `${uuidv4()}.png`; // Generate a unique filename using UUID
-
-
-            // fs.writeFile(path.join(imagesDir, imageName), dataBuffer, (err) => {
-            //     if (err) {
-            //         console.log('Error saving the image:', err);
-            //         // Handle error
-            //     } else {
-            //         console.log('Image saved:', imageName);
-            //         // Update the message object with the URL of the saved image
-            //         newMessage.imagePath = `http://localhost:8080/images/${imageName}`;
-            //         newMessage.imageAlt = messageObj.content;
-            //     }
-            // });
+            
+            newMessage.imageAlt = messageObj.content;
+            newMessage.imagePath = `http://localhost:8080/images/${messageObj.imagePath}`
         }
 
         // add the rest of the newMessage
@@ -176,13 +162,12 @@ io.on('connection', async (socket) => {
         }
 
         try {
-
-            console.log("before save message");            
+        
             // use the database to store the messages
             // and the repository pattern to access the database CRUD operations
             await MessageRepository.createMessage(newMessage);
 
-            console.log("after save message");            
+            // console.log("after save message");            
             
             // get the updated message array from the database
             let updatedMessageArray = await MessageRepository.getAllMessages();

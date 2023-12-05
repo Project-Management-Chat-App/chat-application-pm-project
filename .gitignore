@@ -3,3 +3,4 @@ dist
 build
 .env
 postgres-data
+backend/public/images/
