@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid'); // Import the uuid module
+// const { writeFile } = require("fs");
 
 // Directory where images will be stored
 const imagesDir = path.join(__dirname, 'public', 'images');
@@ -85,6 +86,28 @@ io.on('connection', async (socket) => {
         console.log('user disconnected');
     });
 
+    // this will allow us to handle file upoads
+    socket.on("image-upload", (file, callback) => {
+        console.log("upladed image file", file)
+
+        
+        
+        // add an image name as unique id using UUID library
+        let imageName = `${uuidv4()}.png`;  
+        
+        // Ensure the imageName is defined
+        if (!imageName) {
+            callback({ message: "failure", imageName: "" });
+            return;
+        }
+
+        // Save the content to the disk
+        fs.writeFile(imagesDir, file, (err) => {
+            // Return the imageName in the callback
+            callback({ message: err.message.length >= 0  ? "failure" : "success", imageName: imageName });
+        });
+    })
+
     // listening for incoming chat messages from the server
     socket.on('create-new-message', async (messageObj) => {
         // use interface to type the messageObj
@@ -100,33 +123,33 @@ io.on('connection', async (socket) => {
         }
 
         if (messageObj.messageType === 'image') {
-            const isValidImage = validateBase64ImageString(messageObj.imagePath);
-            if (!isValidImage) {
-                // TODO handle invalid case by displaying problem to user?
-                console.log("the image is not valid")
-                return;
-            }
+            // const isValidImage = validateBase64ImageString(messageObj.imagePath);
+            // if (!isValidImage) {
+            //     // TODO handle invalid case by displaying problem to user?
+            //     console.log("the image is not valid")
+            //     return;
+            // }
 
             // verify that the directory exist:
             ensureImageDirectoryExists();
 
             // start preparing to save the image
-            const base64Data = messageObj.imagePath.replace(/^data:image\/\w+;base64,/, '');
-            const dataBuffer = Buffer.from(base64Data, 'base64');
+            // const base64Data = messageObj.imagePath.replace(/^data:image\/\w+;base64,/, '');
+            // const dataBuffer = Buffer.from(base64Data, 'base64');
             const imageName = `${uuidv4()}.png`; // Generate a unique filename using UUID
 
 
-            fs.writeFile(path.join(imagesDir, imageName), dataBuffer, (err) => {
-                if (err) {
-                    console.log('Error saving the image:', err);
-                    // Handle error
-                } else {
-                    console.log('Image saved:', imageName);
-                    // Update the message object with the URL of the saved image
-                    newMessage.imagePath = `http://localhost:8080/images/${imageName}`;
-                    newMessage.imageAlt = messageObj.content;
-                }
-            });
+            // fs.writeFile(path.join(imagesDir, imageName), dataBuffer, (err) => {
+            //     if (err) {
+            //         console.log('Error saving the image:', err);
+            //         // Handle error
+            //     } else {
+            //         console.log('Image saved:', imageName);
+            //         // Update the message object with the URL of the saved image
+            //         newMessage.imagePath = `http://localhost:8080/images/${imageName}`;
+            //         newMessage.imageAlt = messageObj.content;
+            //     }
+            // });
         }
 
         // add the rest of the newMessage
